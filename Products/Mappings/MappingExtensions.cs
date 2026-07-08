@@ -6,7 +6,7 @@ namespace ProductsFastEndpointsDemo.Products.Mappings;
 public static class MappingExtensions
 {
     public static Product ToDomain(this ProductRequest request)
-        => new(request.Name, request.Price, request.IsAvailable);
+        => new(request.Name, request.Price, request.Quantity, request.IsAvailable);
 
     public static ProductResponse ToResponse(this Product response)
         => new()
@@ -14,6 +14,7 @@ public static class MappingExtensions
             Id = response.Id,
             Name = response.Name,
             Price = response.Price,
+            Quantity = response.Quantity,
             IsAvailable = response.IsAvailable
         };
 

@@ -30,6 +30,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasPrecision(6, 2) // 9999.99
             .HasColumnType("DECIMAL");
 
+        builder.Property(p => p.Quantity)
+                    .IsRequired()
+                    .HasColumnName("quantity")
+                    .HasColumnType("INT");
+
         builder.Property(p => p.IsAvailable)
             .IsRequired()
             .HasColumnName("is_available")
