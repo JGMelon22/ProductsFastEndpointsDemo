@@ -30,24 +30,26 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
 
     public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber, int pageSize)
     {
-        int totalRecords = await dbContext.Products
-            .AsNoTracking()
-            .CountAsync();
+        int totalRecords = await dbContext.Products.AsNoTracking().CountAsync();
 
-        List<Product> products = await dbContext.Products
-            .AsNoTracking()
+        List<Product> products = await dbContext
+            .Products.AsNoTracking()
             .OrderBy(p => p.Id)
             .Skip((pageNumber - 1) / pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-        PagedResponseOffset<Product> pagedResponse = new(products, pageNumber, pageSize, totalRecords);
+        PagedResponseOffset<Product> pagedResponse = new(
+            products,
+            pageNumber,
+            pageSize,
+            totalRecords
+        );
 
         return pagedResponse;
     }
 
-    public async Task<Product?> GetByIdAsync(Guid id)
-     => await dbContext.Products.FindAsync(id);
+    public async Task<Product?> GetByIdAsync(Guid id) => await dbContext.Products.FindAsync(id);
 
     public async Task<Product?> UpdateAsync(Guid id, Product product)
     {
