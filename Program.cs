@@ -1,6 +1,9 @@
 using FastEndpoints;
 using Microsoft.EntityFrameworkCore;
 using ProductsFastEndpointsDemo.Infrastructure.Data;
+using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
+using ProductsFastEndpointsDemo.Infrastructure.Repositories;
+using ProductsFastEndpointsDemo.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddFastEndpoints();
@@ -14,6 +17,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 app.UseFastEndpoints();
