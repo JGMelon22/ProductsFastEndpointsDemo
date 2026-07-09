@@ -19,7 +19,7 @@ public class ProductService(ProductRepository productRepository) : IProductServi
         return product.ToResponse();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         await productRepository.DeleteAsync(id);
     }
@@ -31,7 +31,7 @@ public class ProductService(ProductRepository productRepository) : IProductServi
         return pagedProducts.ToResponse();
     }
 
-    public async Task<ProductResponse?> GetByIdAsync(int id)
+    public async Task<ProductResponse?> GetByIdAsync(Guid id)
     {
         var product = await productRepository.GetByIdAsync(id);
 
@@ -41,7 +41,7 @@ public class ProductService(ProductRepository productRepository) : IProductServi
         return product.ToResponse();
     }
 
-    public async Task<ProductResponse?> UpdateAsync(int id, ProductRequest request)
+    public async Task<ProductResponse?> UpdateAsync(Guid id, ProductRequest request)
     {
         if (request.Quantity == 0 && request.IsAvailable == true)
             throw new Exception("Product quantity can not be 0 if it is available in stock.");

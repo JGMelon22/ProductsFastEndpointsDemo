@@ -16,7 +16,7 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
         return product;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         Product? product = await dbContext.Products.FindAsync(id);
 
@@ -46,10 +46,10 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
         return pagedResponse;
     }
 
-    public async Task<Product?> GetByIdAsync(int id)
+    public async Task<Product?> GetByIdAsync(Guid id)
      => await dbContext.Products.FindAsync(id);
 
-    public async Task<Product?> UpdateAsync(int id, Product product)
+    public async Task<Product?> UpdateAsync(Guid id, Product product)
     {
         Product? existingProduct = await dbContext.Products.FindAsync(id);
 
