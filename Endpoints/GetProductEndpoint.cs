@@ -5,7 +5,7 @@ using ProductsFastEndpointsDemo.Products.DTOs;
 namespace ProductsFastEndpointsDemo.Endpoints
 {
     public class GetProductEndpoint(IProductService productService)
-        : Endpoint<GetProductRequest, ProductResponse>
+        : EndpointWithoutRequest<ProductResponse>
     {
         public override void Configure()
         {
@@ -13,11 +13,11 @@ namespace ProductsFastEndpointsDemo.Endpoints
             AllowAnonymous();
         }
 
-        public override async Task HandleAsync(GetProductRequest req, CancellationToken ct)
+        public override async Task HandleAsync(CancellationToken ct)
         {
-            //Guid id = Route<Guid>("id");
+            Guid id = Route<Guid>("id");
 
-            var product = await productService.GetByIdAsync(req.Id);
+            var product = await productService.GetByIdAsync(id);
 
             if (product is null)
             {
@@ -28,10 +28,4 @@ namespace ProductsFastEndpointsDemo.Endpoints
             await Send.OkAsync(product);
         }
     }
-}
-
-public class GetProductRequest
-{
-    [BindFrom("id")]
-    public Guid Id { get; set; }
 }
