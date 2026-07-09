@@ -21,11 +21,11 @@ namespace ProductsFastEndpointsDemo.Endpoints
 
             if (product is null)
             {
-                await Send.NotFoundAsync();
+                await Send.NotFoundAsync(cancellation: ct);
                 return;
             }
 
-            await Send.OkAsync(product);
+            await Send.OkAsync(product, cancellation: ct);
         }
     }
 }

@@ -9,7 +9,7 @@ public class ProductService(IProductRepository productRepository) : IProductServ
 {
     public async Task<ProductResponse> AddAsync(ProductRequest request)
     {
-        if (request.Quantity == 0 && request.IsAvailable == true)
+        if ((request.Quantity == 0 && request.IsAvailable) || (request.Quantity > 0 && !request.IsAvailable))
             throw new Exception("Product quantity can not be 0 if it is available in stock.");
 
         var product = await productRepository.AddAsync(request.ToDomain());
@@ -44,11 +44,11 @@ public class ProductService(IProductRepository productRepository) : IProductServ
 
     public async Task<ProductResponse?> UpdateAsync(Guid id, ProductRequest request)
     {
-        if (request.Quantity == 0 && request.IsAvailable == true)
+        if ((request.Quantity == 0 && request.IsAvailable) || (request.Quantity > 0 && !request.IsAvailable))
             throw new Exception("Product quantity can not be 0 if it is available in stock.");
 
         var product = await productRepository.UpdateAsync(id, request.ToDomain());
-
+        
         if (product is null)
             return null;
 

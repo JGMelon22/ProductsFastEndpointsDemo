@@ -29,7 +29,11 @@ app.UseFastEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference(options =>
+    {
+        options.DisableMcp();
+        options.Theme = ScalarTheme.Laserwave;
+    });
 }
 
 app.UseHttpsRedirection();

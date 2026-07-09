@@ -65,6 +65,6 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
 
         await dbContext.SaveChangesAsync();
 
-        return product;
+        return existingProduct;
     }
 }

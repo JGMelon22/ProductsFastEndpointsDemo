@@ -28,10 +28,10 @@ public class GetAllProductsEndpoint(IProductService productService)
 
         if (!products.Data.Any())
         {
-            await Send.NoContentAsync();
+            await Send.NoContentAsync(cancellation: ct);
             return;
         }
 
-        await Send.OkAsync(products);
+        await Send.OkAsync(products, cancellation: ct);
     }
 }
