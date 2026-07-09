@@ -1,13 +1,11 @@
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
-using ProductsFastEndpointsDemo.Infrastructure.Repositories;
 using ProductsFastEndpointsDemo.Products.DTOs;
-using ProductsFastEndpointsDemo.Products.Entities;
 using ProductsFastEndpointsDemo.Products.Mappings;
 using ProductsFastEndpointsDemo.Shared;
 
 namespace ProductsFastEndpointsDemo.Infrastructure.Services;
 
-public class ProductService(ProductRepository productRepository) : IProductService
+public class ProductService(IProductRepository productRepository) : IProductService
 {
     public async Task<ProductResponse> AddAsync(ProductRequest request)
     {
@@ -24,7 +22,10 @@ public class ProductService(ProductRepository productRepository) : IProductServi
         await productRepository.DeleteAsync(id);
     }
 
-    public async Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+    public async Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedAsync(
+        int pageNumber,
+        int pageSize
+    )
     {
         var pagedProducts = await productRepository.GetAllAsync(pageNumber, pageSize);
 

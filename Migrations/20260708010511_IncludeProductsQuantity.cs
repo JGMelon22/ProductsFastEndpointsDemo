@@ -15,15 +15,14 @@ namespace ProductsFastEndpointsDemo.Migrations
                 table: "products",
                 type: "INT",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "quantity",
-                table: "products");
+            migrationBuilder.DropColumn(name: "quantity", table: "products");
         }
     }
 }

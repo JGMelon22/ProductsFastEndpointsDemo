@@ -4,6 +4,7 @@ using ProductsFastEndpointsDemo.Infrastructure.Data;
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Infrastructure.Repositories;
 using ProductsFastEndpointsDemo.Infrastructure.Services;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddFastEndpoints();
@@ -13,10 +14,10 @@ builder.Services.AddFastEndpoints();
 builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
+);
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -27,8 +28,8 @@ app.UseFastEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
