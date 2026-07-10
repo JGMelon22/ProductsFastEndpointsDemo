@@ -25,7 +25,7 @@ namespace ProductsFastEndpointsDemo.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ProductsFastEndpointsDemo.Products.Entities.Product", b =>
+            modelBuilder.Entity("ProductsFastEndpointsDemo.API.Products.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

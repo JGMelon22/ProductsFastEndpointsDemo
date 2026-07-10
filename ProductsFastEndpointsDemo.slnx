@@ -1,4 +1,8 @@
 <Solution>
-  <Project Path="../ProductsFastEndpointsDemo.Services.UnitTests/ProductsFastEndpointsDemo.Infrastructure.UnitTests.csproj" Id="72510f77-a984-4e4a-af94-d1d0fb2c1442" />
-  <Project Path="ProductsFastEndpointsDemo.csproj" />
+  <Folder Name="/src/">
+    <Project Path="ProductsFastEndpointsDemo.API\ProductsFastEndpointsDemo.API.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="ProductsFastEndpointsDemo.Infrastructure.UnitTests/ProductsFastEndpointsDemo.Infrastructure.UnitTests.csproj" />
+  </Folder>
 </Solution>
