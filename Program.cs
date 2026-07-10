@@ -23,7 +23,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
-app.UseFastEndpoints();
+app.UseDefaultExceptionHandler()
+    .UseFastEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
