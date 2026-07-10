@@ -23,7 +23,7 @@ public class ProductServiceTests
     }
 
     [Test]
-    public async Task Should_ThrowProductAvailabilityException_When_QuantityAndAvailibilityConflict()
+    public async Task Should_ThrowProductAvailabilityException_When_QuantityAndAvailabilityConflict()
     {
         // Arrange
         ProductRequest request = new("PlayStation 4", 200.00M, 10, false);
@@ -59,5 +59,44 @@ public class ProductServiceTests
 
         // Verify
         await _repository.Received(1).AddAsync(Arg.Any<Product>());
+    }
+
+    [Test]
+    public async Task Should_ThrowProductAvailabilityException_When_UpdatingWithQuantityAndAvailabilityConflict()
+    {
+        // Arrange
+        ProductRequest request = new("PlayStation 4", 200.00M, 10, false);
+
+        // Act & Assert
+        Assert.ThrowsAsync<ProductAvailabilityException>(async () => await _service.UpdateAsync(Guid.NewGuid(), request)
+        );
+
+        // Verify
+        await _repository.DidNotReceive().UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>());
+    }
+
+    [Test]
+    public async Task Should_ReturnProductResponse_When_UpdatingValidProduct()
+    {
+        // Arrange
+        ProductRequest request = new("Xbox Series X", 500.00M, 30, true);
+        Product product = request.ToDomain();
+        ProductResponse response = product.ToResponse();
+
+        _repository.UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>())
+            .Returns(product);
+
+        // Act
+        var result = await _service.UpdateAsync(Guid.NewGuid(), request);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Name, Is.EqualTo(product.Name));
+        Assert.That(result.Price, Is.EqualTo(product.Price));
+        Assert.That(result.Quantity, Is.EqualTo(product.Quantity));
+        Assert.That(result.IsAvailable, Is.EqualTo(product.IsAvailable));
+
+        // Verify
+        await _repository.Received(1).UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>());
     }
 }
