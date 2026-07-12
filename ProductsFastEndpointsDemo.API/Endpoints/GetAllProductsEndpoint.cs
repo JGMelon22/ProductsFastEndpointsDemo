@@ -16,8 +16,8 @@ public class GetAllProductsEndpoint(IProductService productService)
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        int pageSize = Query<int>("pageSize", isRequired: false);
-        int pageNumber = Query<int>("pageNumber", isRequired: false);
+        int pageSize = Query<int?>("pageSize", isRequired: false) ?? 10;
+        int pageNumber = Query<int?>("pageNumber", isRequired: false) ?? 0;
 
         var products = await productService.GetAllPaginatedAsync(pageNumber, pageSize);
 

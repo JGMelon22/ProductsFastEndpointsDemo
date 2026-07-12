@@ -28,7 +28,7 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
         }
     }
 
-    public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber = 0, int pageSize = 10)
+    public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber, int pageSize)
     {
         int totalRecords = await dbContext.Products.AsNoTracking().CountAsync();
 
