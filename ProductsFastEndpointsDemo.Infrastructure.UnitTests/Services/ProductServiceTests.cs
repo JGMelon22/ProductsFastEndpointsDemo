@@ -42,7 +42,6 @@ public class ProductServiceTests
         // Arrange
         ProductRequest request = new("Xbox Series X", 500.00M, 30, true);
         Product product = request.ToDomain();
-        ProductResponse response = product.ToResponse();
 
         _repository.AddAsync(Arg.Any<Product>())
             .Returns(product);
@@ -81,7 +80,6 @@ public class ProductServiceTests
         // Arrange
         ProductRequest request = new("Xbox Series X", 500.00M, 30, true);
         Product product = request.ToDomain();
-        ProductResponse response = product.ToResponse();
 
         _repository.UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>())
             .Returns(product);
