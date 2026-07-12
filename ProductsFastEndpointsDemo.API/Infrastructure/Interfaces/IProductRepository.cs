@@ -6,7 +6,7 @@ namespace ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 public interface IProductRepository
 {
     Task<Product?> GetByIdAsync(Guid id);
-    Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber, int pageSize);
+    Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber = 0, int pageSize = 10);
     Task<Product> AddAsync(Product product);
     Task<Product?> UpdateAsync(Guid id, Product product);
     Task DeleteAsync(Guid id);

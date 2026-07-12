@@ -19,11 +19,6 @@ public class GetAllProductsEndpoint(IProductService productService)
         int pageSize = Query<int>("pageSize", isRequired: false);
         int pageNumber = Query<int>("pageNumber", isRequired: false);
 
-        if (pageNumber < 1)
-            pageNumber = 0;
-        if (pageSize < 1)
-            pageSize = 10;
-
         var products = await productService.GetAllPaginatedAsync(pageNumber, pageSize);
 
         if (!products.Data.Any())

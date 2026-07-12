@@ -33,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(options =>
     {
         options.DisableMcp();
+        options.DisableAgent();
         options.Theme = ScalarTheme.Laserwave;
     });
 }

@@ -28,13 +28,13 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
         }
     }
 
-    public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber = 0, int pageSize = 10)
     {
         int totalRecords = await dbContext.Products.AsNoTracking().CountAsync();
 
         List<Product> products = await dbContext
             .Products.AsNoTracking()
-            .OrderBy(p => p.Id)
+            .OrderBy(p => p.Name)
             .Skip((pageNumber - 1) / pageSize)
             .Take(pageSize)
             .ToListAsync();
