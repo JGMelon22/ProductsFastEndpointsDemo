@@ -1,6 +1,7 @@
 using ProductsFastEndpointsDemo.Exceptions;
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Products.DTOs;
+using ProductsFastEndpointsDemo.Products.Entities;
 using ProductsFastEndpointsDemo.Products.Mappings;
 using ProductsFastEndpointsDemo.Shared;
 
@@ -34,6 +35,13 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         return pagedProducts.ToResponse();
     }
 
+    public async Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedRefinedAsync(string searchTerm, string sortBy, bool ascending, int pageNumber, int pageSize )
+    {
+        var pagedProducts = await productRepository.GetAllAsync(searchTerm, sortBy, ascending, pageNumber, pageSize);
+
+        return pagedProducts.ToResponse();
+    }
+
     public async Task<ProductResponse?> GetByIdAsync(Guid id)
     {
         var product = await productRepository.GetByIdAsync(id);
@@ -42,6 +50,16 @@ public class ProductService(IProductRepository productRepository) : IProductServ
             return null;
 
         return product.ToResponse();
+    }
+
+    public async Task<IEnumerable<ProductResponse?>> GetByName(string name)
+    {
+        if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+            return Enumerable.Empty<ProductResponse>();
+        
+        IEnumerable<Product?> products = await productRepository.GetByNameAsync(name);
+
+        return products.ToResponse();
     }
 
     public async Task<ProductResponse?> UpdateAsync(Guid id, ProductRequest request)
@@ -59,5 +77,4 @@ public class ProductService(IProductRepository productRepository) : IProductServ
 
     private static bool Availability(ProductRequest request)
         => (request.Quantity == 0 && request.IsAvailable) || (request.Quantity > 0 && !request.IsAvailable);
-
 }

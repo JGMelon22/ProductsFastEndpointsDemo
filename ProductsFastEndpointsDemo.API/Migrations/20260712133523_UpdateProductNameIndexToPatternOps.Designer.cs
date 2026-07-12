@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProductsFastEndpointsDemo.Infrastructure.Data;
@@ -11,9 +12,11 @@ using ProductsFastEndpointsDemo.Infrastructure.Data;
 namespace ProductsFastEndpointsDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712133523_UpdateProductNameIndexToPatternOps")]
+    partial class UpdateProductNameIndexToPatternOps
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace ProductsFastEndpointsDemo.Migrations
                     b.HasIndex("Name")
                         .HasDatabaseName("idx_product_name");
 
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "text_pattern_ops" });
+                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { null, "text_pattern_ops" });
 
                     b.ToTable("products", (string)null);
                 });

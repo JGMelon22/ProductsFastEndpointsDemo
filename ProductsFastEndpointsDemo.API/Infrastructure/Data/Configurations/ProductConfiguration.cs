@@ -13,6 +13,9 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(p => p.Id);
 
         builder.HasIndex(p => p.Id).HasDatabaseName("idx_product_id");
+        builder.HasIndex(p => p.Name)
+            .HasOperators("text_pattern_ops")
+            .HasDatabaseName("idx_product_name");
 
         builder.Property(p => p.Id).HasColumnName("id");
 

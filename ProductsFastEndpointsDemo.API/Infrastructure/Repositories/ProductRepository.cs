@@ -8,6 +8,41 @@ namespace ProductsFastEndpointsDemo.Infrastructure.Repositories;
 
 public class ProductRepository(AppDbContext dbContext) : IProductRepository
 {
+    public async Task<PagedResponseOffset<Product>> GetAllPaginatedRefinedAsync(string searchTerm, string sortBy,
+        bool ascending, int pageNumber, int pageSize)
+    {
+        int totalRecords = await dbContext.Products.AsNoTracking().CountAsync();
+        IQueryable<Product> query = dbContext.Products;
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            string pattern = $"%{searchTerm}%";
+            query = query
+                .Where(p => EF.Functions.Like(p.Name, pattern));
+        }
+
+        query = sortBy.ToLowerInvariant() switch
+        {
+            "price" => ascending ? query.OrderBy(p => p.Price) : query.OrderByDescending(p => p.Price),
+            _ => ascending ? query.OrderBy(p => p.Name) : query.OrderByDescending(p => p.Name)
+        };
+
+        var products = await query
+            .AsNoTracking()
+            .Skip((pageNumber - 1) / pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        PagedResponseOffset<Product> pagedResponse = new(
+            products,
+            pageNumber,
+            pageSize,
+            totalRecords
+        );
+
+        return pagedResponse;
+    }
+
     public async Task<Product> AddAsync(Product product)
     {
         await dbContext.Products.AddAsync(product);
@@ -28,13 +63,25 @@ public class ProductRepository(AppDbContext dbContext) : IProductRepository
         }
     }
 
+    public async Task<IEnumerable<Product?>> GetByNameAsync(string name)
+    {
+        string pattern = $"{name}%";
+
+        return await dbContext.Products
+            .AsNoTracking()
+            .Where(p => EF.Functions.Like(p.Name, pattern))
+            .OrderBy(p => p.Name)
+            .Take(10)
+            .ToListAsync();
+    }
+
     public async Task<PagedResponseOffset<Product>> GetAllAsync(int pageNumber, int pageSize)
     {
         int totalRecords = await dbContext.Products.AsNoTracking().CountAsync();
 
         List<Product> products = await dbContext
             .Products.AsNoTracking()
-            .OrderBy(p => p.Id)
+            .OrderBy(p => p.Name)
             .Skip((pageNumber - 1) / pageSize)
             .Take(pageSize)
             .ToListAsync();

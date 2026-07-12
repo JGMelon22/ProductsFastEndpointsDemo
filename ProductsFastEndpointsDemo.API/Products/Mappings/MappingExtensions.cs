@@ -19,7 +19,7 @@ public static class MappingExtensions
             IsAvailable = product.IsAvailable,
         };
 
-    public static IEnumerable<ProductResponse> ToResponse(this IEnumerable<Product> products) =>
+    public static IEnumerable<ProductResponse?> ToResponse(this IEnumerable<Product?> products) =>
         products.Select(p => p.ToResponse());
 
     public static PagedResponseOffset<ProductResponse> ToResponse(
