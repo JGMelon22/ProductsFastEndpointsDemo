@@ -7,7 +7,9 @@ using ProductsFastEndpointsDemo.Infrastructure.Services;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddFastEndpoints();
+builder.Services
+    .AddFastEndpoints()
+    .AddIdempotency();
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -24,6 +26,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler()
+    .UseOutputCache()
     .UseFastEndpoints();
 
 // Configure the HTTP request pipeline.

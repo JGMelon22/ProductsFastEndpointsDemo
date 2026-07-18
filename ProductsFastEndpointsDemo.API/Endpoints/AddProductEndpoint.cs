@@ -10,6 +10,7 @@ public class AddProductEndpoint(IProductService productService) : Endpoint<Produ
     {
         Post("api/product/create");
         AllowAnonymous();
+        Idempotency();
     }
 
     public override async Task HandleAsync(ProductRequest req, CancellationToken ct)
