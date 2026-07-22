@@ -50,14 +50,14 @@ public class ProductServiceTests
         var result = await _service.AddAsync(request);
 
         // Assert
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Name, Is.EqualTo(product.Name));
             Assert.That(result.Price, Is.EqualTo(product.Price));
             Assert.That(result.Quantity, Is.EqualTo(product.Quantity));
             Assert.That(result.IsAvailable, Is.EqualTo(product.IsAvailable));
-        });
+        }
 
         // Verify
         await _repository.Received(1).AddAsync(Arg.Any<Product>());
@@ -91,14 +91,14 @@ public class ProductServiceTests
         var result = await _service.UpdateAsync(Guid.NewGuid(), request);
 
         // Assert
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Name, Is.EqualTo(product.Name));
             Assert.That(result.Price, Is.EqualTo(product.Price));
             Assert.That(result.Quantity, Is.EqualTo(product.Quantity));
             Assert.That(result.IsAvailable, Is.EqualTo(product.IsAvailable));
-        });
+        }
 
         // Verify
         await _repository.Received(1).UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>());
