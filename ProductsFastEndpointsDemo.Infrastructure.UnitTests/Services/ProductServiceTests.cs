@@ -12,7 +12,7 @@ namespace ProductsFastEndpointsDemo.Infrastructure.UnitTests.Services;
 public class ProductServiceTests
 {
     private IProductRepository _repository;
-    private IProductService _service;
+    private ProductService _service;
 
     [SetUp]
     public void Setup()
