@@ -5,6 +5,7 @@ using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Infrastructure.Repositories;
 using ProductsFastEndpointsDemo.Infrastructure.Services;
 using Scalar.AspNetCore;
+using ZiggyCreatures.Caching.Fusion;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services
@@ -23,6 +24,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddFusionCache()
+    .WithDefaultEntryOptions(new FusionCacheEntryOptions
+    {
+        Duration = TimeSpan.FromMinutes(3)
+    });
 
 var app = builder.Build();
 app.UseDefaultExceptionHandler()

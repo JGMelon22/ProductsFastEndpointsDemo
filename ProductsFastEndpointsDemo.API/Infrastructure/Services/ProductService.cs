@@ -3,10 +3,11 @@ using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Products.DTOs;
 using ProductsFastEndpointsDemo.Products.Mappings;
 using ProductsFastEndpointsDemo.Shared;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace ProductsFastEndpointsDemo.Infrastructure.Services;
 
-public class ProductService(IProductRepository productRepository) : IProductService
+public class ProductService(IProductRepository productRepository, IFusionCache cache) : IProductService
 {
     public async Task<ProductResponse> AddAsync(ProductRequest request)
     {
@@ -15,13 +16,16 @@ public class ProductService(IProductRepository productRepository) : IProductServ
 
         var product = await productRepository.AddAsync(request.ToDomain());
 
+        await cache.SetAsync($"product:{product.Id}", product);
+
         return product.ToResponse();
     }
-
 
     public async Task DeleteAsync(Guid id)
     {
         await productRepository.DeleteAsync(id);
+
+        await cache.RemoveAsync(id.ToString());
     }
 
     public async Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedAsync(
@@ -29,14 +33,20 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         int pageSize
     )
     {
-        var pagedProducts = await productRepository.GetAllAsync(pageNumber, pageSize);
+        var cacheKey = $"products:page{pageNumber}:size{pageSize}";
+
+        var pagedProducts =  await cache.GetOrSetAsync(cacheKey,
+            _ => productRepository.GetAllAsync(pageNumber, pageSize));
 
         return pagedProducts.ToResponse();
     }
 
     public async Task<ProductResponse?> GetByIdAsync(Guid id)
     {
-        var product = await productRepository.GetByIdAsync(id);
+        var product = await cache.GetOrSetAsync(
+            $"product:{id}",
+            _ => productRepository.GetByIdAsync(id)
+        );
 
         if (product is null)
             return null;
@@ -54,10 +64,11 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         if (product is null)
             return null;
 
+        await cache.SetAsync($"product:{product.Id}", product);
+
         return product.ToResponse();
     }
 
     private static bool Availability(ProductRequest request)
         => (request.Quantity == 0 && request.IsAvailable) || (request.Quantity > 0 && !request.IsAvailable);
-
 }

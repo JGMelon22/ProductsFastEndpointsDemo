@@ -5,6 +5,7 @@ using ProductsFastEndpointsDemo.Infrastructure.Services;
 using ProductsFastEndpointsDemo.Products.DTOs;
 using ProductsFastEndpointsDemo.Products.Entities;
 using ProductsFastEndpointsDemo.Products.Mappings;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace ProductsFastEndpointsDemo.Infrastructure.UnitTests.Services;
 
@@ -12,14 +13,16 @@ namespace ProductsFastEndpointsDemo.Infrastructure.UnitTests.Services;
 public class ProductServiceTests
 {
     private IProductRepository _repository;
+    private IFusionCache _cache;
     private ProductService _service;
 
     [SetUp]
     public void Setup()
     {
         _repository = Substitute.For<IProductRepository>();
+        _cache = Substitute.For<IFusionCache>();
 
-        _service = new ProductService(_repository);
+        _service = new ProductService(_repository, _cache);
     }
 
     [Test]
@@ -46,6 +49,8 @@ public class ProductServiceTests
         _repository.AddAsync(Arg.Any<Product>())
             .Returns(product);
 
+        await _cache.SetAsync(Arg.Any<string>(), Arg.Any<Product>());
+
         // Act
         var result = await _service.AddAsync(request);
 
@@ -61,6 +66,7 @@ public class ProductServiceTests
 
         // Verify
         await _repository.Received(1).AddAsync(Arg.Any<Product>());
+        await _cache.Received(1).SetAsync(Arg.Any<string>(), Arg.Any<Product>());
     }
 
     [Test]
@@ -102,5 +108,11 @@ public class ProductServiceTests
 
         // Verify
         await _repository.Received(1).UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>());
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _cache.Dispose();
     }
 }
