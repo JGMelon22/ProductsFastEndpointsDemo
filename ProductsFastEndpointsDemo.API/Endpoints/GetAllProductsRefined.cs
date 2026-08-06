@@ -22,7 +22,7 @@ public class GetAllProductsRefined(IProductService productService)
         int pageNumber = Query<int?>("pageNumber", isRequired: false) ?? 0;
         int pageSize = Query<int?>("pageSize", isRequired: false) ?? 10;
 
-        var products = await productService.GetAllPaginatedAsync(searchTerm, sortBy, ascending, pageNumber, pageSize);
+        var products = await productService.GetAllPaginatedRefinedAsync(searchTerm, sortBy, ascending, pageNumber, pageSize);
 
         if (!products.Data.Any())
         {

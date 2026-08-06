@@ -37,7 +37,7 @@ public class ProductService(IProductRepository productRepository) : IProductServ
 
     public async Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedRefinedAsync(string searchTerm, string sortBy, bool ascending, int pageNumber, int pageSize )
     {
-        var pagedProducts = await productRepository.GetAllAsync(searchTerm, sortBy, ascending, pageNumber, pageSize);
+        var pagedProducts = await productRepository.GetAllPaginatedRefinedAsync(searchTerm, sortBy, ascending, pageNumber, pageSize);
 
         return pagedProducts.ToResponse();
     }
