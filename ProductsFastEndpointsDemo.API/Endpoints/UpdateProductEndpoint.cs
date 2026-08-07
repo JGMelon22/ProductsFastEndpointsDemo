@@ -25,6 +25,6 @@ public class UpdateProductEndpoint(IProductService productService)
                 return;
             }
 
-            await Send.OkAsync(product);
+            await Send.OkAsync(product, cancellation: ct);
         }
 }
