@@ -1,16 +1,16 @@
 # Products — FastEndpoints Demo
 
-A small **Products CRUD** API for learning [FastEndpoints](https://fast-endpoints.com/), built with .NET 10, EF Core and PostgreSQL.
+A small **Products CRUD** API for learning [FastEndpoints](https://fast-endpoints.com/), built with .NET 11, EF Core and PostgreSQL.
 
 ## Stack
 
-.NET 10 · FastEndpoints · EF Core (Npgsql) · PostgreSQL · Scalar (API docs) · NUnit + NSubstitute
+.NET 11 · FastEndpoints · EF Core (Npgsql) · PostgreSQL · Scalar -(API docs) · NUnit + NSubstitute
 
 ## Run it
 
 ```bash
 # 1. Set your DB connection in ProductsFastEndpointsDemo.API/appsettings.Development.json
-#    ConnectionStrings:Default → Host=localhost;Port=5432;Database=productsdb;Username=postgres;Password=...
+"Default": "Host=localhost;Port=5432;Database=productsdb;Username=postgres;Password=..."
 
 # 2. Create the schema
 cd ProductsFastEndpointsDemo.API
@@ -38,7 +38,7 @@ Product: `{ name, price (0–9999.99), quantity (>=0), isAvailable }` — `id` i
 
 ## Business rule
 
-Quantity and availability must agree: `quantity = 0` can't be `available`, and `quantity > 0` can't be `unavailable`. Otherwise a `ProductAvailabilityException` is thrown.
+Quantity and availability must agree: quantity = 0 can't be available, and quantity > 0 can't be unavailable. Otherwise an Error is returned as the failure case of the Result<T> union — no exception is thrown. The caller is forced to handle the Error case at compile time.
 
 ## Tests
 
