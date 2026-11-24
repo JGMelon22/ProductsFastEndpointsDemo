@@ -1,6 +1,7 @@
 using FastEndpoints;
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Products.DTOs;
+using ProductsFastEndpointsDemo.Shared;
 
 namespace ProductsFastEndpointsDemo.Endpoints;
 
@@ -13,18 +14,18 @@ public class UpdateProductEndpoint(IProductService productService)
         AllowAnonymous();
     }
 
-        public override async Task HandleAsync(ProductRequest req, CancellationToken ct)
+    public override async Task HandleAsync(ProductRequest req, CancellationToken ct)
+    {
+        Guid id = Route<Guid>("id");
+
+        var result = await productService.UpdateAsync(id, req);
+
+        await (result switch
         {
-            Guid id = Route<Guid>("id");
-
-            var product = await productService.UpdateAsync(id, req);
-            
-            if (product is null)
-            {
-                await Send.ErrorsAsync(400, cancellation: ct);
-                return;
-            }
-
-            await Send.OkAsync(product, cancellation: ct);
-        }
+            ProductResponse response => Send.OkAsync(response, cancellation: ct),
+            Error { Code: ErrorCodes.InvalidProductQuantity } => Send.ErrorsAsync(400, cancellation: ct),
+            Error { Code: ErrorCodes.ProductNotFound } => Send.ErrorsAsync(404, cancellation: ct),
+            _ => throw new ArgumentOutOfRangeException()
+        });
+    }
 }

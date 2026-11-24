@@ -1,4 +1,3 @@
-using ProductsFastEndpointsDemo.Exceptions;
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Products.DTOs;
 using ProductsFastEndpointsDemo.Products.Entities;
@@ -9,16 +8,15 @@ namespace ProductsFastEndpointsDemo.Infrastructure.Services;
 
 public class ProductService(IProductRepository productRepository) : IProductService
 {
-    public async Task<ProductResponse> AddAsync(ProductRequest request)
+    public async Task<Result<ProductResponse>> AddAsync(ProductRequest request)
     {
         if (Availability(request))
-            throw new ProductAvailabilityException(request.Quantity, request.IsAvailable);
+            return ProductErrors.InvalidQuantity;
 
         var product = await productRepository.AddAsync(request.ToDomain());
 
         return product.ToResponse();
     }
-
 
     public async Task DeleteAsync(Guid id)
     {
@@ -42,12 +40,12 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         return pagedProducts.ToResponse();
     }
 
-    public async Task<ProductResponse?> GetByIdAsync(Guid id)
+    public async Task<Result<ProductResponse>> GetByIdAsync(Guid id)
     {
         var product = await productRepository.GetByIdAsync(id);
 
         if (product is null)
-            return null;
+            return ProductErrors.NotFound;
 
         return product.ToResponse();
     }
@@ -62,15 +60,15 @@ public class ProductService(IProductRepository productRepository) : IProductServ
         return products.ToResponse();
     }
 
-    public async Task<ProductResponse?> UpdateAsync(Guid id, ProductRequest request)
+    public async Task<Result<ProductResponse>> UpdateAsync(Guid id, ProductRequest request)
     {
         if (Availability(request))
-            throw new ProductAvailabilityException(request.Quantity, request.IsAvailable);
+            return ProductErrors.InvalidQuantity;
 
         var product = await productRepository.UpdateAsync(id, request.ToDomain());
 
         if (product is null)
-            return null;
+            return ProductErrors.NotFound;
 
         return product.ToResponse();
     }

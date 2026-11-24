@@ -1,6 +1,7 @@
 ﻿using FastEndpoints;
 using ProductsFastEndpointsDemo.Infrastructure.Interfaces;
 using ProductsFastEndpointsDemo.Products.DTOs;
+using ProductsFastEndpointsDemo.Shared;
 
 namespace ProductsFastEndpointsDemo.Endpoints
 {
@@ -17,15 +18,14 @@ namespace ProductsFastEndpointsDemo.Endpoints
         {
             Guid id = Route<Guid>("id");
 
-            var product = await productService.GetByIdAsync(id);
+            var result = await productService.GetByIdAsync(id);
 
-            if (product is null)
+            await (result switch
             {
-                await Send.NotFoundAsync(cancellation: ct);
-                return;
-            }
-
-            await Send.OkAsync(product, cancellation: ct);
+                ProductResponse response => Send.OkAsync(response, cancellation: ct),
+                Error { Code: ErrorCodes.ProductNotFound } => Send.NotFoundAsync(cancellation: ct),
+                _ => throw new ArgumentOutOfRangeException()
+            });
         }
     }
 }

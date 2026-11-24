@@ -10,9 +10,9 @@ public interface IProductService
     Task<PagedResponseOffset<ProductResponse>> GetAllPaginatedRefinedAsync(string searchTerm, string sortBy, bool ascending,
         int pageNumber, int pageSize);
 
-    Task<ProductResponse?> GetByIdAsync(Guid id);
+    Task<Result<ProductResponse>> GetByIdAsync(Guid id);
     Task<IEnumerable<ProductResponse?>> GetByName(string name);
-    Task<ProductResponse?> UpdateAsync(Guid id, ProductRequest request);
+    Task<Result<ProductResponse>> UpdateAsync(Guid id, ProductRequest request);
     Task DeleteAsync(Guid id);
-    Task<ProductResponse> AddAsync(ProductRequest request);
+    Task<Result<ProductResponse>> AddAsync(ProductRequest request);
 }
