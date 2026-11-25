@@ -12,7 +12,7 @@ namespace ProductsFastEndpointsDemo.Infrastructure.UnitTests.Services;
 public class ProductServiceTests
 {
     private IProductRepository _repository;
-    private IProductService _service;
+    private ProductService _service;
 
     [SetUp]
     public void Setup()
@@ -28,7 +28,7 @@ public class ProductServiceTests
         // Arrange
         ProductRequest request = new("PlayStation 4", 200.00M, 10, false);
 
-        // Act 
+        // Act
         var result = await _service.AddAsync(request);
 
         // Assert
@@ -72,7 +72,7 @@ public class ProductServiceTests
         // Arrange
         ProductRequest request = new("PlayStation 4", 200.00M, 10, false);
 
-        // Act 
+        // Act
         var result = await _service.UpdateAsync(Guid.NewGuid(), request);
 
         // Assert
