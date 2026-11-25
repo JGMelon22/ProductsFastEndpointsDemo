@@ -57,10 +57,14 @@ public class ProductServiceTests
         Assert.That(result.Value, Is.InstanceOf<ProductResponse>());
         var actual = (ProductResponse)result.Value;
 
-        Assert.That(actual.Name, Is.EqualTo(expected.Name));
-        Assert.That(actual.Price, Is.EqualTo(expected.Price));
-        Assert.That(actual.Quantity, Is.EqualTo(expected.Quantity));
-        Assert.That(actual.IsAvailable, Is.EqualTo(expected.IsAvailable));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Price, Is.EqualTo(expected.Price));
+            Assert.That(actual.Quantity, Is.EqualTo(expected.Quantity));
+            Assert.That(actual.IsAvailable, Is.EqualTo(expected.IsAvailable));
+        }
 
         // Verify
         await _repository.Received(1).AddAsync(Arg.Any<Product>());
@@ -100,11 +104,14 @@ public class ProductServiceTests
         Assert.That(result.Value, Is.InstanceOf<ProductResponse>());
         var actual = (ProductResponse)result.Value;
 
-        Assert.That(actual, Is.Not.Null);
-        Assert.That(actual.Name, Is.EqualTo(expected.Name));
-        Assert.That(actual.Price, Is.EqualTo(expected.Price));
-        Assert.That(actual.Quantity, Is.EqualTo(expected.Quantity));
-        Assert.That(actual.IsAvailable, Is.EqualTo(expected.IsAvailable));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(actual.Name, Is.EqualTo(expected.Name));
+            Assert.That(actual.Price, Is.EqualTo(expected.Price));
+            Assert.That(actual.Quantity, Is.EqualTo(expected.Quantity));
+            Assert.That(actual.IsAvailable, Is.EqualTo(expected.IsAvailable));
+        }
 
         // Verify
         await _repository.Received(1).UpdateAsync(Arg.Any<Guid>(), Arg.Any<Product>());
